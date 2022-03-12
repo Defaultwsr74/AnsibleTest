@@ -1,0 +1,13 @@
+---
+version: "3.3"
+services:
+  nginx:
+    image: nginx:latest
+    hostname: site
+    restart: always
+    volumes:
+      - /home/nginx:/etc/nginx
+      - /home/nginx/html:/usr/share/nginx/html
+    ports:
+      - 80:80
+      - 443:443
