@@ -1,0 +1,55 @@
+---
+- name: config srv
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: ---> install yum-utils <---
+      yum: name=yum-utils state=latest
+
+    - name: ---> add repo for full docker. <---
+      shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+    - name: ---> enable repo for full docker <---
+      shell: yum-config-manager --enable docker-ce-nightly
+
+    - name: ---> enable repo for full docker <---
+      shell: yum-config-manager --enable docker-ce-test
+
+    - name: ---> install docker-ce loading. <---
+      yum: name=docker-ce state=latest
+
+    - name: ---> install docker-ce-cli loading.. <---
+      yum: name=docker-ce-cli state=latest
+
+    - name: ---> install containerd.io loading... <---
+      yum: name=containerd.io state=latest
+
+    - name: installing docker-compose
+      shell: sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    
+    - name: installing docker-compose
+      shell: sudo chmod +x /usr/local/bin/docker-compose
+
+    - name: ---> open 80 port <---
+      firewalld: port=80/tcp zone=public permanent=true state=enabled
+
+    - name: ---> open 8080 port <---
+      firewalld: port=8080/tcp zone=public permanent=true state=enabled
+
+    - name: ---> open 443 port <---       
+      firewalld: port=443/tcp zone=public permanent=true state=enabled
+
+    - name: coyyp
+      copy: src=/home/nginx/nginx.conf dest=/etc/nginx/
+
+    - name: copy2
+      copy: src=/home/nginx/cert.cer dest=/etc/nginx/
+
+    - name: copy3       
+      copy: src=/home/nginx/cert.key dest=/etc/nginx/
+
+    - name: docker-compose up
+      shell: 
+        cmd: cd /home/nginx && /usr/local/bin/docker-compose up -d --build
+
