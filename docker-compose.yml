@@ -6,8 +6,8 @@ services:
     hostname: site
     restart: always
     volumes:
-      - /home/nginx:/etc/nginx
-      - /home/nginx/html:/usr/share/nginx/html
+      - ./:/etc/nginx
+      - ./html:/usr/share/nginx/html
     ports:
       - 80:80
       - 443:443
