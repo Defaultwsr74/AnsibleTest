@@ -30,26 +30,14 @@
     
     - name: installing docker-compose
       shell: sudo chmod +x /usr/local/bin/docker-compose
+    
+    - name: docker enable 
+      service: name=docker state=started enabled=yes
 
-    - name: ---> open 80 port <---
-      firewalld: port=80/tcp zone=public permanent=true state=enabled
-
-    - name: ---> open 8080 port <---
-      firewalld: port=8080/tcp zone=public permanent=true state=enabled
-
-    - name: ---> open 443 port <---       
-      firewalld: port=443/tcp zone=public permanent=true state=enabled
-
-    - name: coyyp
-      copy: src=/home/nginx/nginx.conf dest=/etc/nginx/
-
-    - name: copy2
-      copy: src=/home/nginx/cert.cer dest=/etc/nginx/
-
-    - name: copy3       
-      copy: src=/home/nginx/cert.key dest=/etc/nginx/
-
-    - name: docker-compose up
+    - name: docker-compose build
       shell: 
-        cmd: cd /home/nginx && /usr/local/bin/docker-compose up -d --build
-
+        cmd: cd .. && /usr/local/bin/docker-compose build
+        
+    - name: docker-compose up
+      shell:
+        cmd: cd .. && /usr/local/bin/docker-compose up -d
